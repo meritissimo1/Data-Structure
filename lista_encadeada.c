@@ -44,11 +44,10 @@ void	inserir_ordenado(t_lista *lista, float num)
 	t_node	*aux;
 
 	novo = (t_node *)malloc(sizeof(t_node));
-	aux = (t_node *)malloc(sizeof(t_node));
 	if (novo)
 	{
 		novo->n = num;
-		if (lista->primeiro ==  NULL)
+		if (lista->primeiro == NULL)
 		{
 			novo->proximo = NULL;
 			lista->primeiro = novo;
@@ -200,19 +199,25 @@ float	busca_posicao_p(t_lista *lista, int posicao)
 	int		i;
 	t_node	*aux;
 
-	i = 0;
-	if (lista->primeiro)
+	i = 1;
+	if (lista->primeiro || (posicao < lista->tamanho && posicao > 0))
 	{
 		aux = lista->primeiro;
-		while (aux && aux->n != num)
+		while (aux && i < posicao)
+		{
 			aux = aux->proximo;
+			i++;
+		}			
 		if (aux)
-			return (1);
+		{
+			printf("\n%.2f\n", aux->n);
+			return (aux->n);	
+		}			
 		else
-			return (0);
+			return (0);		
 	}
 	else
-		return 0;
+		return (0);	
 }
 
 int	main(void)
@@ -226,8 +231,8 @@ int	main(void)
 	while(42)
 	{
 		printf("\n\t0 - Sair\n\t1 - Inserir Ordenado\n\t2 - Imprimir\n\t"
-		"3 - Tamanho\n\t4 - Restart\n\t5 - Remover X\n\t6 - Remover P\n\t"
-		"7 - Busca X\n");
+		"3 - Tamanho\n\t4 - Restart\n\t5 - Remover 'X'\n\t6 - Remover Posicao\n\t"
+		"7 - Busca 'X'\n\t8 - Busca Posicao\n");
 		scanf("%d", &opcao);
 		if (opcao >= 0)
 		{
@@ -262,6 +267,12 @@ int	main(void)
 				printf("Digite um valor: ");
 				scanf("%f", &valor);
 				busca_elemento_x(lista, valor);
+			}
+			else if (opcao == 8)
+			{
+				printf("Digite um valor: ");
+				scanf("%f", &valor);
+				busca_posicao_p(lista, valor);
 			}
 		}
 		else

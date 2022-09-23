@@ -7,25 +7,25 @@ typedef struct s_node
 	struct s_node	*proximo;
 }t_node;
 
-typedef struct s_inicio
+typedef struct s_lista
 {
 	struct s_node	*primeiro;
 	int				tamanho;
-}t_inicio;
+}t_lista;
 
-void	inicializar(t_inicio *lista)
+void	inicializar(t_lista *lista)
 {
 	lista->tamanho = 0;
 	lista->primeiro = NULL;
 }
 
-int	tamanho(t_inicio *lista)
+int	tamanho(t_lista *lista)
 {
 	printf("\nTamanho: %d", lista->tamanho);
 	return lista->tamanho;
 }
 
-void	imprimir(t_inicio *lista)
+void	imprimir(t_lista *lista)
 {
 	t_node	*aux;
 
@@ -38,7 +38,7 @@ void	imprimir(t_inicio *lista)
 	}
 }
 
-void	inserir_ordenado(t_inicio *lista, float num)
+void	inserir_ordenado(t_lista *lista, float num)
 {
 	t_node	*novo;
 	t_node	*aux;
@@ -72,7 +72,7 @@ void	inserir_ordenado(t_inicio *lista, float num)
 		printf("Erro durante alocacao");
 }
 
-void	reinicializar(t_inicio *lista)
+void	reinicializar(t_lista *lista)
 {
 	int		i;
 	t_node	*aux;
@@ -90,7 +90,7 @@ void	reinicializar(t_inicio *lista)
 	lista->tamanho = 0;
 }
 
-void	finalizar(t_inicio *lista)
+void	finalizar(t_lista *lista)
 {
 	int		i;
 	t_node	*aux;
@@ -104,22 +104,130 @@ void	finalizar(t_inicio *lista)
 		lista->primeiro = aux;
 		i++;
 	}
-	free(lista->primeiro);
+	free(lista);
 	exit(0);
+}
 
+void	remove_elemento_x(t_lista *lista, float num)
+{
+	t_node	*aux;
+	t_node	*remover;
+
+	remover = NULL;
+	if (lista->primeiro)
+	{
+		if(lista->primeiro->n == num)
+		{
+			aux = lista->primeiro;
+			aux = aux->proximo;
+			free(lista->primeiro);
+			lista->primeiro = aux;
+			lista->tamanho -= 1;
+		}
+		else
+		{
+			aux = lista->primeiro;
+			while ( aux->proximo && aux->proximo->n != num)
+				aux = aux->proximo;
+			if (aux->proximo)
+			{
+				remover = aux->proximo;	
+				aux->proximo = remover->proximo;
+				lista->tamanho -= 1;
+				free(remover);
+			}		
+		}
+	}
+}
+
+void	remove_posicao_p(t_lista *lista, int posicao)
+{
+	int		i;
+	t_node	*aux;
+	t_node	*remover;	
+
+	i = 2;
+	remover = NULL;
+	if (lista->primeiro || (posicao < lista->tamanho && posicao > 0))
+	{
+		if (posicao == 1)
+		{
+			aux = lista->primeiro;
+			aux = aux->proximo;
+			free(lista->primeiro);
+			lista->primeiro = aux;
+			lista->tamanho -= 1;
+		}
+		else
+		{
+			aux = lista->primeiro;
+			while (aux->proximo && i < posicao)
+			{
+				i++;
+				aux = aux->proximo;
+			}				
+			if (aux->proximo)
+			{
+				remover = aux->proximo;	
+				aux->proximo = remover->proximo;
+				lista->tamanho -= 1;
+				free(remover);
+			}
+		}	
+	}
+}
+
+int	busca_elemento_x(t_lista *lista, float num)
+{
+	t_node	*aux;
+
+	if (lista->primeiro)
+	{
+		aux = lista->primeiro;
+		while (aux && aux->n != num)
+			aux = aux->proximo;
+		if (aux)
+			return (1);
+		else
+			return (0);
+	}
+	else
+		return 0;
+}
+
+float	busca_posicao_p(t_lista *lista, int posicao)
+{
+	int		i;
+	t_node	*aux;
+
+	i = 0;
+	if (lista->primeiro)
+	{
+		aux = lista->primeiro;
+		while (aux && aux->n != num)
+			aux = aux->proximo;
+		if (aux)
+			return (1);
+		else
+			return (0);
+	}
+	else
+		return 0;
 }
 
 int	main(void)
 {
-	t_inicio	*lista;
+	t_lista		*lista;
 	int			opcao;
 	float		valor;
 
-	lista = (t_inicio *)malloc(sizeof(t_inicio));
+	lista = (t_lista *)malloc(sizeof(t_lista));
 	inicializar(lista);
 	while(42)
 	{
-		printf("\n\t0 - Sair\n\t1 - Inserir Ordenado\n\t2 - Imprimir\n\t3 - Tamanho\n\t4 - Restart\n");
+		printf("\n\t0 - Sair\n\t1 - Inserir Ordenado\n\t2 - Imprimir\n\t"
+		"3 - Tamanho\n\t4 - Restart\n\t5 - Remover X\n\t6 - Remover P\n\t"
+		"7 - Busca X\n");
 		scanf("%d", &opcao);
 		if (opcao >= 0)
 		{
@@ -137,10 +245,29 @@ int	main(void)
 				reinicializar(lista);
 			else if (opcao == 0)
 				finalizar(lista);
+			else if (opcao == 5)
+			{
+				printf("Digite um valor: ");
+				scanf("%f", &valor);
+				remove_elemento_x(lista, valor);
+			}
+			else if (opcao == 6)
+			{
+				printf("Digite um valor: ");
+				scanf("%f", &valor);
+				remove_posicao_p(lista, valor);
+			}
+			else if (opcao == 7)
+			{
+				printf("Digite um valor: ");
+				scanf("%f", &valor);
+				busca_elemento_x(lista, valor);
+			}
 		}
 		else
 			printf("Opcao Invalida");
 	}
+	free(lista);
 
 	return (0);
 }

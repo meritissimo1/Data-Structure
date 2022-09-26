@@ -21,21 +21,28 @@ void	inicializar(t_lista *lista)
 
 int	tamanho(t_lista *lista)
 {
-	printf("\nTamanho: %d", lista->tamanho);
-	return lista->tamanho;
+	if (lista)
+	{
+		printf("\nTamanho: %d", lista->tamanho);
+		return lista->tamanho;
+	}
+	return (0);	
 }
 
 void	imprimir(t_lista *lista)
 {
 	t_node	*aux;
 
-	aux = lista->primeiro;
-	printf("\nLista: ");
-	while(aux)
+	if (lista->tamanho >= 0)
 	{
-		printf("%.2f ", aux->n);
-		aux = aux->proximo;
-	}
+		aux = lista->primeiro;
+		printf("\nLista: ");
+		while(aux)
+		{
+			printf("%.2f ", aux->n);
+			aux = aux->proximo;
+		}
+	}	
 }
 
 void	inserir_ordenado(t_lista *lista, float num)
@@ -226,59 +233,69 @@ int	main(void)
 	int			opcao;
 	float		valor;
 
-	lista = (t_lista *)malloc(sizeof(t_lista));
-	inicializar(lista);
-	while(42)
+	printf("\n\t1 - Start\n\t2 - Sair\n");
+	scanf("%d", &opcao);
+	if (opcao ==  1)
 	{
-		printf("\n\t0 - Sair\n\t1 - Inserir Ordenado\n\t2 - Imprimir\n\t"
-		"3 - Tamanho\n\t4 - Restart\n\t5 - Remover 'X'\n\t6 - Remover Posicao\n\t"
-		"7 - Busca 'X'\n\t8 - Busca Posicao\n");
-		scanf("%d", &opcao);
-		if (opcao >= 0)
+		lista = (t_lista *)malloc(sizeof(t_lista));
+		inicializar(lista);
+		while(42)
 		{
-			if (opcao == 1)
+			printf("\n\t1 - Imprimir\n\t2 - Inserir Ordenado\n\t"
+			"3 - Remove Elemento 'x'\n\t4 - Remove Posicao 'p'\n\t5 - Busca Elemento 'x'\n\t"
+			"6 - Busca Posicao 'p'\n\t7 - Tamanho\n\t8 - Restart\n\t9 - Finalizar\n");
+			scanf("%d", &opcao);
+			if (opcao >= 0 && opcao <= 42)
 			{
-				printf("Digite um valor: ");
-				scanf("%f", &valor);
-				inserir_ordenado(lista, valor);
+				if (opcao == 42)
+				{
+					printf("Created by Marcelo 'Meritissimo' the answer to life the universe and everything.\n");
+				}
+				else if (opcao == 2)
+				{
+					printf("Digite um valor: ");
+					scanf("%f", &valor);
+					inserir_ordenado(lista, valor);
+				}
+				else if (opcao == 1)
+					imprimir(lista);
+				else if (opcao == 7)
+					tamanho(lista);
+				else if (opcao == 8)
+					reinicializar(lista);
+				else if (opcao == 9)
+					finalizar(lista);
+				else if (opcao == 3)
+				{
+					printf("Digite um valor: ");
+					scanf("%f", &valor);
+					remove_elemento_x(lista, valor);
+				}
+				else if (opcao == 4)
+				{
+					printf("Digite um valor: ");
+					scanf("%f", &valor);
+					remove_posicao_p(lista, valor);
+				}
+				else if (opcao == 5)
+				{
+					printf("Digite um valor: ");
+					scanf("%f", &valor);
+					busca_elemento_x(lista, valor);
+				}
+				else if (opcao == 6)
+				{
+					printf("Digite um valor: ");
+					scanf("%f", &valor);
+					busca_posicao_p(lista, valor);
+				}
 			}
-			else if (opcao == 2)
-				imprimir(lista);
-			else if (opcao == 3)
-				tamanho(lista);
-			else if (opcao == 4)
-				reinicializar(lista);
-			else if (opcao == 0)
-				finalizar(lista);
-			else if (opcao == 5)
-			{
-				printf("Digite um valor: ");
-				scanf("%f", &valor);
-				remove_elemento_x(lista, valor);
-			}
-			else if (opcao == 6)
-			{
-				printf("Digite um valor: ");
-				scanf("%f", &valor);
-				remove_posicao_p(lista, valor);
-			}
-			else if (opcao == 7)
-			{
-				printf("Digite um valor: ");
-				scanf("%f", &valor);
-				busca_elemento_x(lista, valor);
-			}
-			else if (opcao == 8)
-			{
-				printf("Digite um valor: ");
-				scanf("%f", &valor);
-				busca_posicao_p(lista, valor);
-			}
+			else
+				printf("Opcao Invalida");
 		}
-		else
-			printf("Opcao Invalida");
+		free(lista);
 	}
-	free(lista);
-
+	else
+		return (0);
 	return (0);
 }
